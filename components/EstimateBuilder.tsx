@@ -17,8 +17,8 @@ const [claimType, setClaimType] = useState<
   "retail" | "insurance"
 >("retail");
   const [address, setAddress] = useState("");
-  const [squares, setSquares] = useState(29);
-  const [pricePerSquare, setPricePerSquare] = useState(551);
+  const [squares, setSquares] = useState("29");
+const [pricePerSquare, setPricePerSquare] = useState("551");
   const [notes, setNotes] = useState("");
 
   const [jobType, setJobType] = useState<
@@ -33,7 +33,9 @@ const [claimType, setClaimType] = useState<
     "Boards",
   ]);
 
-  const total = squares * pricePerSquare;
+ const total =
+  Number(squares || 0) *
+  Number(pricePerSquare || 0);
 
   const today = new Date().toLocaleDateString();
 
@@ -163,13 +165,13 @@ const loadTemplate = (
             </label>
 
             <input
-              className="field"
-              type="number"
-              value={squares}
-              onChange={(e) =>
-                setSquares(Number(e.target.value))
-              }
-            />
+  className="field"
+  type="number"
+  value={squares}
+  onChange={(e) =>
+    setSquares(e.target.value)
+  }
+/>
 
             <label>
               {language === "es"
@@ -178,15 +180,15 @@ const loadTemplate = (
             </label>
 
             <input
-              className="field"
-              type="number"
-              value={pricePerSquare}
-              onChange={(e) =>
-                setPricePerSquare(
-                  Number(e.target.value)
-                )
-              }
-            />
+  className="field"
+  type="number"
+  value={pricePerSquare}
+  onChange={(e) =>
+    setPricePerSquare(
+      e.target.value
+    )
+  }
+/>
 
             <h3 style={{ marginTop: 20 }}>
               {language === "es"

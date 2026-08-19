@@ -8,17 +8,45 @@ export default function EstimateBuilder({
 }: {
   language?: "en" | "es";
 }) {
+  const [jobType, setJobType] = useState<"repair" | "replacement">(
+    "replacement"
+  );
+
   const [customer, setCustomer] = useState("");
   const [address, setAddress] = useState("");
   const [squares, setSquares] = useState(29);
   const [pricePerSquare, setPricePerSquare] = useState(551);
 
+  const [materials, setMaterials] = useState([
+    "Ridge Cap",
+    "Rake",
+    "Drip Edge",
+    "Fascia",
+    "Boards",
+  ]);
+
   const total = squares * pricePerSquare;
+
+  const addMaterial = () => {
+    setMaterials([...materials, ""]);
+  };
+
+  const removeMaterial = (index: number) => {
+    setMaterials(materials.filter((_, i) => i !== index));
+  };
+
+  const updateMaterial = (
+    index: number,
+    value: string
+  ) => {
+    const copy = [...materials];
+    copy[index] = value;
+    setMaterials(copy);
+  };
 
   return (
     <main className="section">
       <div className="container">
-
         <div
           style={{
             background: "#fff",
@@ -86,6 +114,88 @@ export default function EstimateBuilder({
                 setPricePerSquare(Number(e.target.value))
               }
             />
+
+            <div style={{ marginTop: 20 }}>
+              <h3>
+                {language === "es"
+                  ? "Tipo de Proyecto"
+                  : "Project Type"}
+              </h3>
+
+              <label style={{ marginRight: 20 }}>
+                <input
+                  type="radio"
+                  checked={jobType === "repair"}
+                  onChange={() => setJobType("repair")}
+                />
+                {" "}
+                {language === "es"
+                  ? "Reparación"
+                  : "Repair"}
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  checked={jobType === "replacement"}
+                  onChange={() =>
+                    setJobType("replacement")
+                  }
+                />
+                {" "}
+                {language === "es"
+                  ? "Reemplazo Completo"
+                  : "Full Replacement"}
+              </label>
+            </div>
+
+            <div style={{ marginTop: 20 }}>
+              <h3>
+                {language === "es"
+                  ? "Materiales"
+                  : "Materials"}
+              </h3>
+
+              {materials.map((material, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    gap: 8,
+                    marginBottom: 8,
+                  }}
+                >
+                  <input
+                    value={material}
+                    onChange={(e) =>
+                      updateMaterial(
+                        index,
+                        e.target.value
+                      )
+                    }
+                    style={{
+                      flex: 1,
+                    }}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      removeMaterial(index)
+                    }
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={addMaterial}
+              >
+                + Add Material
+              </button>
+            </div>
           </div>
 
           <div
@@ -93,6 +203,7 @@ export default function EstimateBuilder({
               marginTop: 32,
               padding: 24,
               border: "1px solid #ddd",
+              borderRadius: 12,
             }}
           >
             <h2>SPA Roofing Estimate</h2>
@@ -138,8 +249,29 @@ export default function EstimateBuilder({
             </p>
 
             <h2>
-              Total: ${total.toLocaleString()}
+              {language === "es"
+                ? "Total"
+                : "Total"}
+              : ${total.toLocaleString()}
             </h2>
+
+            <div style={{ marginTop: 20 }}>
+              <h3>
+                {language === "es"
+                  ? "Términos de Pago"
+                  : "Payment Terms"}
+              </h3>
+
+              <p>
+                {jobType === "replacement"
+                  ? language === "es"
+                    ? "Se requiere un depósito del 50% antes de comenzar. El saldo restante se debe al completar el trabajo."
+                    : "50% deposit required before work begins. Remaining balance due upon completion."
+                  : language === "es"
+                  ? "El pago se debe al completar la reparación."
+                  : "Payment due upon completion of repair work."}
+              </p>
+            </div>
 
             <hr />
 
@@ -150,11 +282,9 @@ export default function EstimateBuilder({
             </h3>
 
             <ul>
-              <li>Ridge Cap</li>
-              <li>Rake</li>
-              <li>Drip Edge</li>
-              <li>Fascia</li>
-              <li>Boards</li>
+              {materials.map((material, index) => (
+                <li key={index}>{material}</li>
+              ))}
             </ul>
 
             <p style={{ marginTop: 40 }}>
@@ -174,7 +304,7 @@ export default function EstimateBuilder({
             onClick={() => window.print()}
           >
             {language === "es"
-              ? "Imprimir"
+              ? "Imprimir Estimado"
               : "Print Estimate"}
           </button>
         </div>

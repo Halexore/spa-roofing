@@ -9,6 +9,13 @@ export default function EstimateBuilder({
   language?: "en" | "es";
 }) {
   const [customer, setCustomer] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+const [representative, setRepresentative] =
+  useState("Selvin Alvarez");
+
+const [claimType, setClaimType] = useState<
+  "retail" | "insurance"
+>("retail");
   const [address, setAddress] = useState("");
   const [squares, setSquares] = useState(29);
   const [pricePerSquare, setPricePerSquare] = useState(551);
@@ -52,7 +59,37 @@ export default function EstimateBuilder({
     copy[index] = value;
     setMaterials(copy);
   };
+const loadTemplate = (
+  template: "shingle" | "metal" | "repair"
+) => {
+  if (template === "shingle") {
+    setMaterials([
+      "Architectural Shingles",
+      "Synthetic Underlayment",
+      "Ridge Cap",
+      "Drip Edge",
+      "Pipe Boots",
+    ]);
+  }
 
+  if (template === "metal") {
+    setMaterials([
+      "Metal Panels",
+      "Closure Strips",
+      "Ridge Cap",
+      "Trim",
+      "Fasteners",
+    ]);
+  }
+
+  if (template === "repair") {
+    setMaterials([
+      "Replacement Shingles",
+      "Sealant",
+      "Flashing",
+    ]);
+  }
+};
   return (
     <main className="section">
       <div className="container">
@@ -80,7 +117,19 @@ export default function EstimateBuilder({
                 setCustomer(e.target.value)
               }
             />
+<label>
+  {language === "es"
+    ? "Teléfono"
+    : "Phone Number"}
+</label>
 
+<input
+  className="field"
+  value={customerPhone}
+  onChange={(e) =>
+    setCustomerPhone(e.target.value)
+  }
+/>
             <label>
               {language === "es"
                 ? "Dirección"
@@ -94,7 +143,19 @@ export default function EstimateBuilder({
                 setAddress(e.target.value)
               }
             />
+<label>
+  {language === "es"
+    ? "Representante"
+    : "Sales Representative"}
+</label>
 
+<input
+  className="field"
+  value={representative}
+  onChange={(e) =>
+    setRepresentative(e.target.value)
+  }
+/>
             <label>
               {language === "es"
                 ? "Cuadrados"
@@ -132,7 +193,41 @@ export default function EstimateBuilder({
                 ? "Tipo de Proyecto"
                 : "Project Type"}
             </h3>
+<h3 style={{ marginTop: 20 }}>
+  {language === "es"
+    ? "Tipo de Cliente"
+    : "Customer Type"}
+</h3>
 
+<label>
+  <input
+    type="radio"
+    checked={claimType === "retail"}
+    onChange={() =>
+      setClaimType("retail")
+    }
+  />
+  {" "}
+  {language === "es"
+    ? "Cliente Directo"
+    : "Retail Customer"}
+</label>
+
+<br />
+
+<label>
+  <input
+    type="radio"
+    checked={claimType === "insurance"}
+    onChange={() =>
+      setClaimType("insurance")
+    }
+  />
+  {" "}
+  {language === "es"
+    ? "Reclamo de Seguro"
+    : "Insurance Claim"}
+</label>
             <label>
               <input
                 type="radio"
@@ -164,7 +259,47 @@ export default function EstimateBuilder({
                 ? "Reemplazo Completo"
                 : "Full Replacement"}
             </label>
+<h3 style={{ marginTop: 20 }}>
+  {language === "es"
+    ? "Plantillas"
+    : "Templates"}
+</h3>
 
+<div
+  style={{
+    display: "flex",
+    gap: 8,
+    flexWrap: "wrap",
+    marginBottom: 16,
+  }}
+>
+  <button
+    type="button"
+    onClick={() =>
+      loadTemplate("shingle")
+    }
+  >
+    Architectural
+  </button>
+
+  <button
+    type="button"
+    onClick={() =>
+      loadTemplate("metal")
+    }
+  >
+    Metal
+  </button>
+
+  <button
+    type="button"
+    onClick={() =>
+      loadTemplate("repair")
+    }
+  >
+    Repair
+  </button>
+</div>
             <h3 style={{ marginTop: 20 }}>
               {language === "es"
                 ? "Materiales"
@@ -282,6 +417,14 @@ export default function EstimateBuilder({
                   : "Customer"}
               </strong>{" "}
               {customer}
+              <p>
+  <strong>
+    {language === "es"
+      ? "Teléfono"
+      : "Phone"}
+  </strong>{" "}
+  {customerPhone}
+</p>
             </p>
 
             <p>
@@ -291,6 +434,14 @@ export default function EstimateBuilder({
                   : "Address"}
               </strong>{" "}
               {address}
+              <p>
+  <strong>
+    {language === "es"
+      ? "Representante"
+      : "Representative"}
+  </strong>{" "}
+  {representative}
+</p>
             </p>
 
             <p>
@@ -310,7 +461,20 @@ export default function EstimateBuilder({
               </strong>{" "}
               ${pricePerSquare}
             </p>
-
+<p>
+  <strong>
+    {language === "es"
+      ? "Tipo"
+      : "Type"}
+  </strong>{" "}
+  {claimType === "insurance"
+    ? language === "es"
+      ? "Reclamo de Seguro"
+      : "Insurance Claim"
+    : language === "es"
+    ? "Cliente Directo"
+    : "Retail Customer"}
+</p>
             <div className="total-box">
               <h2>
                 $

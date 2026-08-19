@@ -16,6 +16,7 @@ export default function EstimateBuilder({
   const [address, setAddress] = useState("");
   const [squares, setSquares] = useState(29);
   const [pricePerSquare, setPricePerSquare] = useState(551);
+  const [notes, setNotes] = useState("");
 
   const [materials, setMaterials] = useState([
     "Ridge Cap",
@@ -26,6 +27,7 @@ export default function EstimateBuilder({
   ]);
 
   const total = squares * pricePerSquare;
+  const today = new Date().toLocaleDateString();
 
   const addMaterial = () => {
     setMaterials([...materials, ""]);
@@ -35,10 +37,7 @@ export default function EstimateBuilder({
     setMaterials(materials.filter((_, i) => i !== index));
   };
 
-  const updateMaterial = (
-    index: number,
-    value: string
-  ) => {
+  const updateMaterial = (index: number, value: string) => {
     const copy = [...materials];
     copy[index] = value;
     setMaterials(copy);
@@ -59,7 +58,7 @@ export default function EstimateBuilder({
             <Image
               src="/logo/logo-reference.png"
               alt="SPA Roofing"
-              width={300}
+              width={320}
               height={120}
             />
 
@@ -68,6 +67,10 @@ export default function EstimateBuilder({
                 ? "Generador de Estimados"
                 : "Estimate Builder"}
             </h1>
+
+            <p>501-549-8833</p>
+            <p>sparoofing6@gmail.com</p>
+            <p>Little Rock, Arkansas</p>
           </div>
 
           <hr />
@@ -102,9 +105,7 @@ export default function EstimateBuilder({
             <input
               type="number"
               value={squares}
-              onChange={(e) =>
-                setSquares(Number(e.target.value))
-              }
+              onChange={(e) => setSquares(Number(e.target.value))}
             />
 
             <input
@@ -138,9 +139,7 @@ export default function EstimateBuilder({
                 <input
                   type="radio"
                   checked={jobType === "replacement"}
-                  onChange={() =>
-                    setJobType("replacement")
-                  }
+                  onChange={() => setJobType("replacement")}
                 />
                 {" "}
                 {language === "es"
@@ -168,10 +167,7 @@ export default function EstimateBuilder({
                   <input
                     value={material}
                     onChange={(e) =>
-                      updateMaterial(
-                        index,
-                        e.target.value
-                      )
+                      updateMaterial(index, e.target.value)
                     }
                     style={{
                       flex: 1,
@@ -180,9 +176,7 @@ export default function EstimateBuilder({
 
                   <button
                     type="button"
-                    onClick={() =>
-                      removeMaterial(index)
-                    }
+                    onClick={() => removeMaterial(index)}
                   >
                     X
                   </button>
@@ -196,6 +190,25 @@ export default function EstimateBuilder({
                 + Add Material
               </button>
             </div>
+
+            <div style={{ marginTop: 20 }}>
+              <h3>
+                {language === "es"
+                  ? "Notas"
+                  : "Notes"}
+              </h3>
+
+              <textarea
+                rows={4}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder={
+                  language === "es"
+                    ? "Ingrese notas adicionales..."
+                    : "Enter additional notes..."
+                }
+              />
+            </div>
           </div>
 
           <div
@@ -207,6 +220,13 @@ export default function EstimateBuilder({
             }}
           >
             <h2>SPA Roofing Estimate</h2>
+
+            <p>
+              <strong>
+                {language === "es" ? "Fecha" : "Date"}:
+              </strong>{" "}
+              {today}
+            </p>
 
             <p>
               <strong>
@@ -248,11 +268,16 @@ export default function EstimateBuilder({
               ${pricePerSquare}
             </p>
 
-            <h2>
-              {language === "es"
-                ? "Total"
-                : "Total"}
-              : ${total.toLocaleString()}
+            <h2
+              style={{
+                fontSize: "2rem",
+                color: "#244b35",
+                marginTop: 16,
+              }}
+            >
+              {language === "es" ? "Total" : "Total"}:
+              {" "}
+              ${total.toLocaleString()}
             </h2>
 
             <div style={{ marginTop: 20 }}>
@@ -282,12 +307,28 @@ export default function EstimateBuilder({
             </h3>
 
             <ul>
-              {materials.map((material, index) => (
-                <li key={index}>{material}</li>
-              ))}
+              {materials
+                .filter((material) => material.trim())
+                .map((material, index) => (
+                  <li key={index}>{material}</li>
+                ))}
             </ul>
 
-            <p style={{ marginTop: 40 }}>
+            {notes && (
+              <>
+                <hr />
+
+                <h3>
+                  {language === "es"
+                    ? "Notas"
+                    : "Notes"}
+                </h3>
+
+                <p>{notes}</p>
+              </>
+            )}
+
+            <p style={{ marginTop: 50 }}>
               __________________________
             </p>
 
